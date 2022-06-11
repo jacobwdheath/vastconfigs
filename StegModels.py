@@ -442,12 +442,16 @@ class CNNModels:
                 K.set_value(autoencoder_model.optimizer.lr, self.lr_schedule(epoch))
                 K.set_value(decoder_model.optimizer.lr, self.lr_schedule(epoch))
 
-            if epoch + 1 == round(epochs / 4):
-                encoder_model.save_weights(path + "encoder " + str(epoch))
-                decoder_model.save_weights(path + "decoder " + str(epoch))
-                autoencoder_model.save_weights(path + "autoencoder" + str(epoch))
-
             history.append(np.mean(auto_encode_loss))
+
+            if epoch + 1 % (epochs / 4) == 0:
+                encoder_model.save_weights(path + "encoder_weights " + str(epoch))
+                decoder_model.save_weights(path + "decoder_weights " + str(epoch))
+                autoencoder_model.save_weights(path + "autoencoder_weights " + str(epoch))
+
+        encoder_model.save(path + "encoder.h5")
+        decoder_model.save(path + "decoder.h5")
+        autoencoder_model.save(path + "autoencoder.h5")
 
         with open(path + "autoencoder_loss.pckl", 'wb') as f:
             pickle.dump(auto_encode_loss, f)
@@ -541,6 +545,8 @@ class CNNModels:
                 decoder2_model.save_weights(path + "decoder2 " + str(epoch))
                 decoder3_model.save_weights(path + "decoder3 " + str(epoch))
                 autoencoder_model.save_weights(path + "autoencoder" + str(epoch))
+
+
 
             history.append(np.mean(auto_encode_loss))
 
